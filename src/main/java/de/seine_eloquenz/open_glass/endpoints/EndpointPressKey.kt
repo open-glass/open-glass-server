@@ -1,55 +1,60 @@
-package de.seine_eloquenz.open_glass.endpoints;
+package de.seine_eloquenz.open_glass.endpoints
 
-import de.seine_eloquenz.open_glass.GameProvider;
-import de.seine_eloquenz.open_glass.OpenGlassServer;
-import fi.iki.elonen.NanoHTTPD;
+import de.seine_eloquenz.open_glass.GameProvider
+import de.seine_eloquenz.open_glass.OpenGlassServer
+import fi.iki.elonen.NanoHTTPD
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import java.awt.AWTException
+import java.awt.Robot
+import java.awt.event.KeyEvent
 
-import java.awt.AWTException;
-import java.awt.Robot;
-import java.awt.event.KeyEvent;
-import java.util.List;
-import java.util.Map;
-
-public class EndpointPressKey implements Endpoint {
-
-    private final Robot robot;
-    private final GameProvider gameProvider;
-
-    public EndpointPressKey(GameProvider gameProvider) {
-        robot = initializeRobot();
-        this.gameProvider = gameProvider;
-    }
-
-    @Override
-    public NanoHTTPD.Response serve(final Map<String, List<String>> params) {
-        if (params.containsKey("key")) {
-            char key = params.get("key").get(0).charAt(0);
+class EndpointPressKey(gameProvider: GameProvider) : Endpoint {
+    private val robot: Robot?
+    private val gameProvider: GameProvider
+    override fun serve(params: Map<String, List<String>>): NanoHTTPD.Response {
+        return if (params.containsKey("key")) {
+            val key = params.getValue("key")[0][0]
             if (gameProvider.get().isAllowedKey(key)) {
-                return handleKeyPress(key);
+                handleKeyPress(key)
             } else {
-                return BAD_REQUEST;
+                Endpoint.BAD_REQUEST
             }
         } else {
-            return BAD_REQUEST;
+            Endpoint.BAD_REQUEST
         }
     }
 
-    private NanoHTTPD.Response handleKeyPress(char character) {
-        if (robot == null) {
-            return ERROR;
+    private fun handleKeyPress(character: Char): NanoHTTPD.Response {
+        return if (robot == null) {
+            Endpoint.ERROR
         } else {
-            OpenGlassServer.LOG.info("Logged key " + character);
-            robot.keyPress(KeyEvent.getExtendedKeyCodeForChar(character));
-            return OK;
+            OpenGlassServer.LOG.info("Logged key $character")
+            pressKey('w')
+            Endpoint.OK
         }
     }
 
-    private Robot initializeRobot() {
-        try {
-            return new Robot();
-        } catch (AWTException e) {
-            e.printStackTrace();
-            return null;
+    private fun pressKey(character: Char) {
+        robot!!
+        GlobalScope.launch {
+            robot.keyPress(KeyEvent.getExtendedKeyCodeForChar(character.toInt()))
+            robot.delay(100)
+            robot.keyRelease(KeyEvent.getExtendedKeyCodeForChar(character.toInt()))
         }
+    }
+
+    private fun initializeRobot(): Robot? {
+        return try {
+            Robot()
+        } catch (e: AWTException) {
+            e.printStackTrace()
+            null
+        }
+    }
+
+    init {
+        robot = initializeRobot()
+        this.gameProvider = gameProvider
     }
 }
