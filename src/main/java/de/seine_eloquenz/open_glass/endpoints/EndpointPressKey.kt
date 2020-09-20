@@ -30,7 +30,7 @@ class EndpointPressKey(gameProvider: GameProvider) : Endpoint {
             Endpoint.ERROR
         } else {
             OpenGlassServer.LOG.info("Logged key $character")
-            pressKey('w')
+            pressKey(character)
             Endpoint.OK
         }
     }
