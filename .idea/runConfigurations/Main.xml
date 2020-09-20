@@ -1,0 +1,16 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Main" type="Application" factoryName="Application" nameIsGenerated="true">
+    <option name="MAIN_CLASS_NAME" value="de.seine_eloquenz.open_glass.Main" />
+    <module name="open-glass" />
+    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/debug" />
+    <extension name="coverage">
+      <pattern>
+        <option name="PATTERN" value="de.seine_eloquenz.open_glass.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+    </extension>
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
