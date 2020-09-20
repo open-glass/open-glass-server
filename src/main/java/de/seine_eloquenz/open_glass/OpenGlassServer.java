@@ -42,7 +42,7 @@ public class OpenGlassServer extends NanoHTTPD {
         String uri = session.getUri();
         OpenGlassServer.LOG.info(method + " '" + uri + "' ");
         Map<String, List<String>> params = session.getParameters();
-        if (params.get("API_KEY") == null) {
+        if (params.get("API_KEY") == null || !apiKey.equals(params.get("API_KEY").get(0))) {
             return FORBIDDEN;
         } else {
             if ("/chooseGame".equals(uri)) {
