@@ -6,7 +6,15 @@ import fi.iki.elonen.NanoHTTPD
 interface Endpoint {
     fun serve(params: Map<String, List<String>>): NanoHTTPD.Response?
 
-    companion object {
+    companion object StatusCode {
+
+        @JvmField
+        val FORBIDDEN: NanoHTTPD.Response = OpenGlassServer.newFixedLengthResponse(
+                NanoHTTPD.Response.Status.FORBIDDEN,
+                NanoHTTPD.MIME_PLAINTEXT,
+                "You're not authenticated"
+        )
+
         @JvmField
         val BAD_REQUEST: NanoHTTPD.Response = OpenGlassServer.newFixedLengthResponse(
                 NanoHTTPD.Response.Status.BAD_REQUEST,

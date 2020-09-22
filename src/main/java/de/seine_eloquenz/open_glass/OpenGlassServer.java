@@ -19,8 +19,6 @@ public class OpenGlassServer extends NanoHTTPD {
      * logger to log to.
      */
     public static final Logger LOG = Logger.getLogger(OpenGlassServer.class.getName());
-    private static final Response FORBIDDEN
-            = newFixedLengthResponse(Response.Status.FORBIDDEN, MIME_PLAINTEXT, "You're not authenticated");
 
     private final String apiKey;
     private final Map<String, Endpoint> endpoints;
@@ -44,7 +42,7 @@ public class OpenGlassServer extends NanoHTTPD {
         OpenGlassServer.LOG.info(method + " '" + uri + "' ");
         Map<String, List<String>> params = session.getParameters();
         if (params.get("API_KEY") == null || !apiKey.equals(params.get("API_KEY").get(0))) {
-            return FORBIDDEN;
+            return Endpoint.FORBIDDEN;
         } else {
             if ("/chooseGame".equals(uri)) {
                 if (params.containsKey("game")) {
