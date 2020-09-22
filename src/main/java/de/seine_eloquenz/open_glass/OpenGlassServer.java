@@ -50,12 +50,12 @@ public class OpenGlassServer extends NanoHTTPD {
                 if (params.containsKey("game")) {
                     try {
                         this.game = Games.valueOf(params.get("game").get(0));
-                        return EndpointKey.OK;
+                        return Endpoint.OK;
                     } catch (IllegalArgumentException e) {
-                        return EndpointKey.BAD_REQUEST;
+                        return Endpoint.BAD_REQUEST;
                     }
                 } else {
-                    return EndpointKey.BAD_REQUEST;
+                    return Endpoint.BAD_REQUEST;
                 }
             }
             return endpoints.getOrDefault(uri, new EndpointNotFound()).serve(params);
