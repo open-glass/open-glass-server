@@ -1,12 +1,8 @@
-package de.seine_eloquenz.open_glass.game;
+package de.seine_eloquenz.open_glass.game
 
-import java.awt.event.KeyEvent;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
+import java.awt.event.KeyEvent
 
-public enum Games implements Game {
-
+enum class Games(vararg keys: Int) : Game {
     //TODO Make these keybindings configurable in the future
     //We're using default values for simplicities sake for now
     NONE,
@@ -16,19 +12,17 @@ public enum Games implements Game {
             KeyEvent.VK_G, //Gimbals
             KeyEvent.VK_P, //Weapons power
             KeyEvent.VK_O, //Shields power
-            KeyEvent.VK_I //Engines power
+            KeyEvent.VK_I  //Engines power
     ),
     ;
 
-    final Collection<Integer> allowedKeys;
+    private val allowedKeys: Collection<Int>
 
-    Games(Integer... keys) {
-        this.allowedKeys = new HashSet<>();
-        Collections.addAll(allowedKeys, keys);
+    override fun isAllowedKey(key: Int): Boolean {
+        return allowedKeys.contains(key)
     }
 
-    @Override
-    public boolean isAllowedKey(final int key) {
-        return allowedKeys.contains(key);
+    init {
+        allowedKeys = keys.toSet()
     }
 }

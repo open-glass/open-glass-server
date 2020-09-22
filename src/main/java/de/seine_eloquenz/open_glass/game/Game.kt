@@ -1,7 +1,5 @@
-package de.seine_eloquenz.open_glass.game;
+package de.seine_eloquenz.open_glass.game
 
-public interface Game {
-
-    boolean isAllowedKey(int key);
-
+interface Game {
+    fun isAllowedKey(key: Int): Boolean
 }
