@@ -9,13 +9,34 @@ import java.awt.AWTException
 import java.awt.Robot
 import java.awt.event.KeyEvent
 
-class EndpointPressKey(gameProvider: GameProvider) : Endpoint {
+class EndpointKey private constructor(gameProvider: GameProvider, duration: Int) : Endpoint {
+
+    companion object Factory {
+        private const val KEY_PRESS_DURATION: Int = 100
+
+        /**
+         * Creates an Endpoint handling a key press event
+         */
+        fun endpointKeyPress(gameProvider: GameProvider): EndpointKey {
+            return EndpointKey(gameProvider, KEY_PRESS_DURATION)
+        }
+
+        /**
+         * Creates an Endpoint handling a key hold event
+         */
+        fun endpointKeyHold(gameProvider: GameProvider, duration: Int): EndpointKey {
+            return EndpointKey(gameProvider, duration)
+        }
+    }
+
     private val robot: Robot?
+    private val duration: Int
     private val gameProvider: GameProvider
 
     init {
         robot = initializeRobot()
         this.gameProvider = gameProvider
+        this.duration = duration
     }
 
     override fun serve(params: Map<String, List<String>>): NanoHTTPD.Response {
@@ -45,7 +66,7 @@ class EndpointPressKey(gameProvider: GameProvider) : Endpoint {
         robot!!
         GlobalScope.launch {
             robot.keyPress(KeyEvent.getExtendedKeyCodeForChar(character.toInt()))
-            robot.delay(100)
+            robot.delay(duration)
             robot.keyRelease(KeyEvent.getExtendedKeyCodeForChar(character.toInt()))
         }
     }

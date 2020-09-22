@@ -2,8 +2,8 @@ package de.seine_eloquenz.open_glass;
 
 
 import de.seine_eloquenz.open_glass.endpoints.Endpoint;
+import de.seine_eloquenz.open_glass.endpoints.EndpointKey;
 import de.seine_eloquenz.open_glass.endpoints.EndpointNotFound;
-import de.seine_eloquenz.open_glass.endpoints.EndpointPressKey;
 import de.seine_eloquenz.open_glass.game.Game;
 import de.seine_eloquenz.open_glass.game.Games;
 import fi.iki.elonen.NanoHTTPD;
@@ -33,7 +33,8 @@ public class OpenGlassServer extends NanoHTTPD {
         this.apiKey = apiKey;
         this.game = Games.NONE;
         gameProvider = () -> game;
-        this.endpoints.put("/presskey", new EndpointPressKey(gameProvider));
+        this.endpoints.put("/presskey", EndpointKey.Factory.endpointKeyPress(gameProvider));
+        this.endpoints.put("/holdkey", EndpointKey.Factory.endpointKeyHold(gameProvider, 10000));
     }
 
     @Override
@@ -49,12 +50,12 @@ public class OpenGlassServer extends NanoHTTPD {
                 if (params.containsKey("game")) {
                     try {
                         this.game = Games.valueOf(params.get("game").get(0));
-                        return Endpoint.OK;
+                        return EndpointKey.OK;
                     } catch (IllegalArgumentException e) {
-                        return Endpoint.BAD_REQUEST;
+                        return EndpointKey.BAD_REQUEST;
                     }
                 } else {
-                    return Endpoint.BAD_REQUEST;
+                    return EndpointKey.BAD_REQUEST;
                 }
             }
             return endpoints.getOrDefault(uri, new EndpointNotFound()).serve(params);

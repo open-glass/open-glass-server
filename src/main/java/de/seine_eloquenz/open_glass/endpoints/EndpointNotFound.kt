@@ -1,15 +1,15 @@
-package de.seine_eloquenz.open_glass.endpoints;
+package de.seine_eloquenz.open_glass.endpoints
 
-import de.seine_eloquenz.open_glass.OpenGlassServer;
-import fi.iki.elonen.NanoHTTPD;
+import de.seine_eloquenz.open_glass.OpenGlassServer
+import fi.iki.elonen.NanoHTTPD
 
-import java.util.List;
-import java.util.Map;
+class EndpointNotFound : Endpoint {
 
-public class EndpointNotFound implements Endpoint {
-
-    @Override
-    public NanoHTTPD.Response serve(final Map<String, List<String>> params) {
-        return OpenGlassServer.newFixedLengthResponse(NanoHTTPD.Response.Status.NOT_FOUND, NanoHTTPD.MIME_PLAINTEXT, "Endpoint not found");
+    override fun serve(params: Map<String, List<String>>): NanoHTTPD.Response {
+        return OpenGlassServer.newFixedLengthResponse(
+                NanoHTTPD.Response.Status.NOT_FOUND,
+                NanoHTTPD.MIME_PLAINTEXT,
+                "de.seine_eloquenz.open_glass.endpoints.Endpoint not found"
+        )
     }
 }
