@@ -12,6 +12,12 @@ import java.awt.event.KeyEvent
 class EndpointPressKey(gameProvider: GameProvider) : Endpoint {
     private val robot: Robot?
     private val gameProvider: GameProvider
+
+    init {
+        robot = initializeRobot()
+        this.gameProvider = gameProvider
+    }
+
     override fun serve(params: Map<String, List<String>>): NanoHTTPD.Response {
         return if (params.containsKey("key")) {
             val key = params.getValue("key")[0][0]
@@ -51,10 +57,5 @@ class EndpointPressKey(gameProvider: GameProvider) : Endpoint {
             e.printStackTrace()
             null
         }
-    }
-
-    init {
-        robot = initializeRobot()
-        this.gameProvider = gameProvider
     }
 }
