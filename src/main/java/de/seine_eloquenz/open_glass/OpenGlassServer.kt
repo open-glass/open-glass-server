@@ -1,62 +1,61 @@
-package de.seine_eloquenz.open_glass;
+package de.seine_eloquenz.open_glass
 
+import de.seine_eloquenz.open_glass.endpoints.Endpoint
+import de.seine_eloquenz.open_glass.endpoints.EndpointKey.Factory.endpointKeyHold
+import de.seine_eloquenz.open_glass.endpoints.EndpointKey.Factory.endpointKeyPress
+import de.seine_eloquenz.open_glass.endpoints.EndpointNotFound
+import de.seine_eloquenz.open_glass.game.Game
+import de.seine_eloquenz.open_glass.game.Games
+import fi.iki.elonen.NanoHTTPD
+import java.util.*
+import java.util.logging.Logger
 
-import de.seine_eloquenz.open_glass.endpoints.Endpoint;
-import de.seine_eloquenz.open_glass.endpoints.EndpointKey;
-import de.seine_eloquenz.open_glass.endpoints.EndpointNotFound;
-import de.seine_eloquenz.open_glass.game.Game;
-import de.seine_eloquenz.open_glass.game.Games;
-import fi.iki.elonen.NanoHTTPD;
+class OpenGlassServer(hostname: String?, port: Int, apiKey: String) : NanoHTTPD(hostname, port) {
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Logger;
+    companion object {
 
-public class OpenGlassServer extends NanoHTTPD {
-
-    /**
-     * logger to log to.
-     */
-    public static final Logger LOG = Logger.getLogger(OpenGlassServer.class.getName());
-
-    private final String apiKey;
-    private final Map<String, Endpoint> endpoints;
-    private Game game;
-    private final GameProvider gameProvider;
-
-    public OpenGlassServer(final String hostname, final int port, final String apiKey) {
-        super(hostname, port);
-        this.endpoints = new HashMap<>();
-        this.apiKey = apiKey;
-        this.game = Games.NONE;
-        gameProvider = () -> game;
-        this.endpoints.put("/presskey", EndpointKey.Factory.endpointKeyPress(gameProvider));
-        this.endpoints.put("/holdkey", EndpointKey.Factory.endpointKeyHold(gameProvider, 10000));
+        /**
+         * logger to log to.
+         */
+        @JvmField
+        val LOG: Logger = Logger.getLogger(OpenGlassServer::class.java.name)
     }
 
-    @Override
-    public Response serve(final IHTTPSession session) {
-        Method method = session.getMethod();
-        String uri = session.getUri();
-        OpenGlassServer.LOG.info(method + " '" + uri + "' ");
-        Map<String, List<String>> params = session.getParameters();
-        if (params.get("API_KEY") == null || !apiKey.equals(params.get("API_KEY").get(0))) {
-            return Endpoint.FORBIDDEN;
+    private val apiKey: String
+    private val endpoints: MutableMap<String, Endpoint>
+    private var game: Game
+    private val gameProvider: GameProvider
+
+    init {
+        endpoints = HashMap()
+        this.apiKey = apiKey
+        game = Games.NONE
+        gameProvider = GameProvider { game }
+        endpoints["/presskey"] = endpointKeyPress(gameProvider)
+        endpoints["/holdkey"] = endpointKeyHold(gameProvider, 10000)
+    }
+
+    override fun serve(session: IHTTPSession): Response {
+        val method = session.method
+        val uri = session.uri
+        LOG.info("$method '$uri' ")
+        val params = session.parameters
+        return if (params["API_KEY"] == null || apiKey != params["API_KEY"]!![0]) {
+            Endpoint.FORBIDDEN
         } else {
-            if ("/chooseGame".equals(uri)) {
-                if (params.containsKey("game")) {
+            if ("/chooseGame" == uri) {
+                return if (params.containsKey("game")) {
                     try {
-                        this.game = Games.valueOf(params.get("game").get(0));
-                        return Endpoint.OK;
-                    } catch (IllegalArgumentException e) {
-                        return Endpoint.BAD_REQUEST;
+                        game = Games.valueOf(params["game"]!![0])
+                        Endpoint.OK
+                    } catch (e: IllegalArgumentException) {
+                        Endpoint.BAD_REQUEST
                     }
                 } else {
-                    return Endpoint.BAD_REQUEST;
+                    Endpoint.BAD_REQUEST
                 }
             }
-            return endpoints.getOrDefault(uri, new EndpointNotFound()).serve(params);
+            endpoints.getOrDefault(uri, EndpointNotFound()).serve(params)
         }
     }
 }
