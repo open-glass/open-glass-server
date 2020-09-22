@@ -1,7 +1,7 @@
 package de.seine_eloquenz.open_glass.endpoints
 
 import de.seine_eloquenz.open_glass.GameProvider
-import de.seine_eloquenz.open_glass.OpenGlassServer
+import de.seine_eloquenz.open_glass.Keys
 import fi.iki.elonen.NanoHTTPD
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -41,8 +41,8 @@ class EndpointKey private constructor(gameProvider: GameProvider, duration: Int)
 
     override fun serve(params: Map<String, List<String>>): NanoHTTPD.Response {
         return if (params.containsKey("key")) {
-            val key = params.getValue("key")[0][0]
-            if (gameProvider.get().isAllowedKey(key)) {
+            val key = Keys.convert(params.getValue("key")[0])
+            if (key != null && gameProvider.get().isAllowedKey(key)) {
                 handleKeyPress(key)
             } else {
                 Endpoint.BAD_REQUEST
@@ -52,22 +52,21 @@ class EndpointKey private constructor(gameProvider: GameProvider, duration: Int)
         }
     }
 
-    private fun handleKeyPress(character: Char): NanoHTTPD.Response {
+    private fun handleKeyPress(key: Int): NanoHTTPD.Response {
         return if (robot == null) {
             Endpoint.ERROR
         } else {
-            OpenGlassServer.LOG.info("Logged key $character")
-            pressKey(character)
+            pressKey(key)
             Endpoint.OK
         }
     }
 
-    private fun pressKey(character: Char) {
+    private fun pressKey(key: Int) {
         robot!!
         GlobalScope.launch {
-            robot.keyPress(KeyEvent.getExtendedKeyCodeForChar(character.toInt()))
+            robot.keyPress(KeyEvent.getExtendedKeyCodeForChar(key))
             robot.delay(duration)
-            robot.keyRelease(KeyEvent.getExtendedKeyCodeForChar(character.toInt()))
+            robot.keyRelease(KeyEvent.getExtendedKeyCodeForChar(key))
         }
     }
 
