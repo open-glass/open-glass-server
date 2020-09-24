@@ -1,4 +1,4 @@
-package de.seine_eloquenz.open_glass.game
+package de.seine_eloquenz.open_glass.server.game
 
 import java.awt.event.KeyEvent
 

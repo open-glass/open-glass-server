@@ -1,7 +1,7 @@
-package de.seine_eloquenz.open_glass.endpoints
+package de.seine_eloquenz.open_glass.server.endpoints
 
-import de.seine_eloquenz.open_glass.GameProvider
-import de.seine_eloquenz.open_glass.Keys
+import de.seine_eloquenz.open_glass.server.GameProvider
+import de.seine_eloquenz.open_glass.server.Keys
 import fi.iki.elonen.NanoHTTPD
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch

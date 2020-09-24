@@ -1,11 +1,11 @@
-package de.seine_eloquenz.open_glass
+package de.seine_eloquenz.open_glass.server
 
-import de.seine_eloquenz.open_glass.endpoints.Endpoint
-import de.seine_eloquenz.open_glass.endpoints.EndpointKey.Factory.endpointKeyHold
-import de.seine_eloquenz.open_glass.endpoints.EndpointKey.Factory.endpointKeyPress
-import de.seine_eloquenz.open_glass.endpoints.EndpointNotFound
-import de.seine_eloquenz.open_glass.game.Game
-import de.seine_eloquenz.open_glass.game.Games
+import de.seine_eloquenz.open_glass.server.endpoints.Endpoint
+import de.seine_eloquenz.open_glass.server.endpoints.EndpointKey.Factory.endpointKeyHold
+import de.seine_eloquenz.open_glass.server.endpoints.EndpointKey.Factory.endpointKeyPress
+import de.seine_eloquenz.open_glass.server.endpoints.EndpointNotFound
+import de.seine_eloquenz.open_glass.server.game.Game
+import de.seine_eloquenz.open_glass.server.game.Games
 import fi.iki.elonen.NanoHTTPD
 import java.util.*
 import java.util.logging.Logger

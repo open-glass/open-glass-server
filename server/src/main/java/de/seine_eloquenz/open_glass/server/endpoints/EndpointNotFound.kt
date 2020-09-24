@@ -1,4 +1,4 @@
-package de.seine_eloquenz.open_glass.endpoints
+package de.seine_eloquenz.open_glass.server.endpoints
 
 import fi.iki.elonen.NanoHTTPD
 

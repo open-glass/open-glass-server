@@ -1,4 +1,4 @@
-package de.seine_eloquenz.open_glass;
+package de.seine_eloquenz.open_glass.server;
 
 import fi.iki.elonen.NanoHTTPD;
 import org.apache.commons.configuration2.Configuration;

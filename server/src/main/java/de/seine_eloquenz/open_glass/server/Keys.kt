@@ -1,4 +1,4 @@
-package de.seine_eloquenz.open_glass
+package de.seine_eloquenz.open_glass.server
 
 import java.awt.event.KeyEvent
 import java.lang.reflect.Field
