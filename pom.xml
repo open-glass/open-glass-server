@@ -11,6 +11,7 @@
     <modules>
         <module>cli</module>
         <module>server</module>
+        <module>open-glass-common</module>
     </modules>
 
     <properties>
