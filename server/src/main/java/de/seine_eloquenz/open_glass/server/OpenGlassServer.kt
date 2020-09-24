@@ -4,6 +4,7 @@ import de.seine_eloquenz.open_glass.server.endpoints.Endpoint
 import de.seine_eloquenz.open_glass.server.endpoints.EndpointKey.Factory.endpointKeyHold
 import de.seine_eloquenz.open_glass.server.endpoints.EndpointKey.Factory.endpointKeyPress
 import de.seine_eloquenz.open_glass.server.endpoints.EndpointNotFound
+import de.seine_eloquenz.open_glass.server.endpoints.EndpointStatus
 import de.seine_eloquenz.open_glass.server.game.Game
 import de.seine_eloquenz.open_glass.server.game.Games
 import fi.iki.elonen.NanoHTTPD
@@ -34,6 +35,7 @@ class OpenGlassServer(hostname: String?, port: Int, apiKey: String) : NanoHTTPD(
         gameProvider = GameProvider { game }
         endpoints["/presskey"] = endpointKeyPress(gameProvider)
         endpoints["/holdkey"] = endpointKeyHold(gameProvider, 10000)
+        endpoints["/status"] = EndpointStatus(gameProvider)
     }
 
     override fun serve(session: IHTTPSession): Response {
