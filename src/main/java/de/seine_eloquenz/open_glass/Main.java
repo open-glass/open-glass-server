@@ -1,5 +1,6 @@
 package de.seine_eloquenz.open_glass;
 
+import fi.iki.elonen.NanoHTTPD;
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.FileBasedConfiguration;
 import org.apache.commons.configuration2.PropertiesConfiguration;
@@ -8,9 +9,11 @@ import org.apache.commons.configuration2.builder.fluent.Parameters;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Scanner;
+import java.util.logging.Level;
 
 public class Main {
+
+    private static final Object lock = new Object();
 
     public static void main(String[] args) {
         Configuration configuration = loadConfig();
@@ -23,17 +26,24 @@ public class Main {
         String apiKey = configuration.getString("apiKey");
         OpenGlassServer server = new OpenGlassServer(hostname, port, apiKey);
         try {
-            server.start();
+            OpenGlassServer.LOG.info("Starting Server");
+            server.start(NanoHTTPD.SOCKET_READ_TIMEOUT, false);
         } catch (IOException e) {
-            e.printStackTrace();
+            OpenGlassServer.LOG.log(Level.SEVERE, "Error starting the Server, dumping stacktrace:", e.getCause());
             System.exit(1);
         }
-        //TODO this will have to do for now, improve in the long run
-        Scanner scanner = new Scanner(System.in);
-        OpenGlassServer.LOG.info("Server started. Enter anything to stop");
-        scanner.next();
+        synchronized (lock) {
+            while (!server.shallStop()) {
+                try {
+                    lock.wait(10000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        OpenGlassServer.LOG.info("Stopping.");
         server.stop();
-        System.exit(0);
+        OpenGlassServer.LOG.info("Server stopped successfully");
     }
 
     private static Configuration loadConfig() {

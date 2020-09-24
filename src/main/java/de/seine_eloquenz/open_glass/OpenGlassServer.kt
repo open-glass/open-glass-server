@@ -25,6 +25,7 @@ class OpenGlassServer(hostname: String?, port: Int, apiKey: String) : NanoHTTPD(
     private val endpoints: MutableMap<String, Endpoint>
     private var game: Game
     private val gameProvider: GameProvider
+    private var stop: Boolean = false
 
     init {
         endpoints = HashMap()
@@ -43,19 +44,31 @@ class OpenGlassServer(hostname: String?, port: Int, apiKey: String) : NanoHTTPD(
         return if (params["API_KEY"] == null || apiKey != params["API_KEY"]!![0]) {
             Endpoint.FORBIDDEN
         } else {
-            if ("/chooseGame" == uri) {
-                return if (params.containsKey("game")) {
-                    try {
-                        game = Games.valueOf(params["game"]!![0])
-                        Endpoint.OK
-                    } catch (e: IllegalArgumentException) {
+            return when (uri) {
+                "/chooseGame" -> {
+                    if (params.containsKey("game")) {
+                        try {
+                            game = Games.valueOf(params["game"]!![0])
+                            Endpoint.OK
+                        } catch (e: IllegalArgumentException) {
+                            Endpoint.BAD_REQUEST
+                        }
+                    } else {
                         Endpoint.BAD_REQUEST
                     }
-                } else {
-                    Endpoint.BAD_REQUEST
+                }
+                "/shutdown" -> {
+                    stop = true
+                    LOG.info("Received shutdown signal. Will shutdown on next Main tick.")
+                    Endpoint.OK
+                }
+                else -> {
+                    endpoints.getOrDefault(uri, EndpointNotFound()).serve(params)
                 }
             }
-            endpoints.getOrDefault(uri, EndpointNotFound()).serve(params)
+
         }
     }
+
+    fun shallStop(): Boolean = stop
 }
