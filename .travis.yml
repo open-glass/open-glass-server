@@ -1,0 +1,6 @@
+os: linux
+dist: focal
+language: java
+jdk: openjdk10
+before_install:
+  - pip install pathlib
