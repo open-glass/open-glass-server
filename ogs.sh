@@ -1,5 +1,4 @@
 #!/bin/sh
-command=$1
 if [ $# -eq 0 ]
   then
     echo "Provide one of the following arguments:"
@@ -8,4 +7,5 @@ if [ $# -eq 0 ]
     echo "stop: stop the server"
     return
 fi
+command=$1
 java -jar ogs-cli.jar "$command"
