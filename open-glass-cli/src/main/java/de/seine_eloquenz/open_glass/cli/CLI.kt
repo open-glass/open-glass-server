@@ -19,6 +19,12 @@ fun main(args: Array<String>) {
     if (config == null) {
         println("Your server config seems to be missing!")
         return
+    } else if ("" == config.getString("host")
+            || "" == config.getString("port")
+            || "" == config.getString("apiKey")
+    ) {
+        println("Your server config is incomplete!")
+        return
     }
 
     fun running(): Boolean {
