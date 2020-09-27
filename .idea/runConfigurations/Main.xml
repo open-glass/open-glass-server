@@ -1,7 +1,7 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Main" type="Application" factoryName="Application">
     <option name="MAIN_CLASS_NAME" value="de.seine_eloquenz.open_glass.server.Main" />
-    <module name="server" />
+    <module name="open-glass-server" />
     <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/debug" />
     <extension name="coverage">
       <pattern>

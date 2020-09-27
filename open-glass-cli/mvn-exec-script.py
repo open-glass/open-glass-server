@@ -1,4 +1,4 @@
-import distutils.dir_util as dir_util
+import distutils.dir_util as dirUtil
 import os
 import shutil
 import sys
@@ -11,10 +11,10 @@ if argCount != 2:
 version: str = sys.argv[1]
 cwd = os.path.dirname(os.getcwd())
 
-serverPath = os.path.join(cwd, "server", "target")
+cliPath = os.path.join(cwd, "open-glass-cli", "target")
 targetPath = os.path.join(cwd, "target", "result")
-serverFile = os.path.join(serverPath, f"open-glass-server-{version}.jar")
+cliFile = os.path.join(cliPath, f"open-glass-cli-{version}.jar")
 
 Path(targetPath).mkdir(parents=True, exist_ok=True)
-dir_util.copy_tree(os.path.join(serverPath, "libs"), targetPath)
-shutil.copy(serverFile, os.path.join(targetPath, "ogs.jar"))
+dirUtil.copy_tree(os.path.join(cliPath, "libs"), targetPath)
+shutil.copy(cliFile, os.path.join(targetPath, "ogs-cli.jar"))

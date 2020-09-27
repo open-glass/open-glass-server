@@ -9,8 +9,8 @@
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
     <modules>
-        <module>cli</module>
-        <module>server</module>
+        <module>open-glass-cli</module>
+        <module>open-glass-server</module>
         <module>open-glass-common</module>
     </modules>
 
