@@ -2,6 +2,9 @@ package de.seine_eloquenz.open_glass.server.endpoints
 
 import fi.iki.elonen.NanoHTTPD
 
+/**
+ * Represents an HTTP Endpoint
+ */
 interface Endpoint {
     fun serve(params: Map<String, List<String>>): NanoHTTPD.Response
 

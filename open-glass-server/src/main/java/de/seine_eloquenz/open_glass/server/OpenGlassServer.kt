@@ -11,6 +11,9 @@ import fi.iki.elonen.NanoHTTPD
 import java.util.*
 import java.util.logging.Logger
 
+/**
+ * Main Server class handling HTTP requests
+ */
 class OpenGlassServer(hostname: String?, port: Int, apiKey: String) : NanoHTTPD(hostname, port) {
 
     companion object {
@@ -72,5 +75,8 @@ class OpenGlassServer(hostname: String?, port: Int, apiKey: String) : NanoHTTPD(
         }
     }
 
+    /**
+     * Returns whether the server received a shutdown signal and is about to stop
+     */
     fun shallStop(): Boolean = stop
 }

@@ -9,8 +9,14 @@ import java.awt.AWTException
 import java.awt.Robot
 import java.awt.event.KeyEvent
 
+/**
+ * Endpoint for handling Key press and hold related events
+ */
 class EndpointKey private constructor(gameProvider: GameProvider, duration: Int) : Endpoint {
 
+    /**
+     * Factory for creating different kinds of EndpointKeys
+     */
     companion object Factory {
         private const val KEY_PRESS_DURATION: Int = 100
 

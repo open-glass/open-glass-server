@@ -5,6 +5,10 @@ import org.apache.commons.configuration2.Configuration
 import java.net.ConnectException
 import java.net.URL
 
+/**
+ * Script to start server
+ * This script validates command params and checks if the config file is present
+ */
 fun main(args: Array<String>) {
     if (args.isEmpty()) {
         println("""

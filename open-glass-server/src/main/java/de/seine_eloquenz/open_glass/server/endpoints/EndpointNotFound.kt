@@ -2,6 +2,9 @@ package de.seine_eloquenz.open_glass.server.endpoints
 
 import fi.iki.elonen.NanoHTTPD
 
+/**
+ * Endpoint handling missing Endpoints
+ */
 class EndpointNotFound : Endpoint {
 
     override fun serve(params: Map<String, List<String>>): NanoHTTPD.Response {

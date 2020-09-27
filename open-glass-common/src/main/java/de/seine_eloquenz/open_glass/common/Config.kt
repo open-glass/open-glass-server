@@ -8,6 +8,9 @@ import org.apache.commons.configuration2.builder.fluent.Parameters
 import org.apache.commons.configuration2.ex.ConfigurationException
 import java.io.File
 
+/**
+ * Object responsible for loading the config file from disk
+ */
 object Config {
 
     fun loadConfig(): Configuration? {
