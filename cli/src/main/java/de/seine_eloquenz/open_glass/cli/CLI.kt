@@ -24,8 +24,10 @@ fun main(args: Array<String>) {
     fun running(): Boolean {
         val url = "http://${config.getString("host")}:${config.getInt("port")}/status?API_KEY=${config.getString("apiKey")}"
         return try {
-            val res = URL(url).readText()
-            res.contains("running")
+            val conn = URL(url).openConnection()
+            conn.readTimeout = 100
+            conn.connect()
+            conn.getInputStream().bufferedReader().readText().contains("running")
         } catch (e: ConnectException) {
             false
         }
@@ -35,6 +37,7 @@ fun main(args: Array<String>) {
         "start" -> {
             if (!running()) {
                 Runtime.getRuntime().exec("java -jar ogs.jar")
+                println("Server started!")
             } else {
                 println("Server is already running!")
             }
@@ -44,8 +47,12 @@ fun main(args: Array<String>) {
                 val url = "http://${config.getString("host")}:${config.getInt("port")}/shutdown?API_KEY=${config.getString("apiKey")}"
                 URL(url).readText()
             }
-            shutdown()
-            println("Server stopped.")
+            if (running()) {
+                shutdown()
+                println("Server stopped.")
+            } else {
+                println("Server was not running.")
+            }
         }
         "status" -> {
             when (running()) {
