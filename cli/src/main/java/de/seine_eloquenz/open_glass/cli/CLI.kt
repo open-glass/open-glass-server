@@ -2,6 +2,7 @@ package de.seine_eloquenz.open_glass.cli
 
 import de.seine_eloquenz.open_glass.common.Config
 import org.apache.commons.configuration2.Configuration
+import java.net.ConnectException
 import java.net.URL
 
 fun main(args: Array<String>) {
@@ -22,8 +23,12 @@ fun main(args: Array<String>) {
 
     fun running(): Boolean {
         val url = "http://${config.getString("host")}:${config.getInt("port")}/status?API_KEY=${config.getString("apiKey")}"
-        val res = URL(url).readText()
-        return res.contains("running")
+        return try {
+            val res = URL(url).readText()
+            res.contains("running")
+        } catch (e: ConnectException) {
+            false
+        }
     }
 
     when (args[0]) {
