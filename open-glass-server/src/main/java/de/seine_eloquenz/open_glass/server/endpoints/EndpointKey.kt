@@ -23,6 +23,7 @@ class EndpointKey private constructor(gameProvider: GameProvider, duration: Int)
 
         /**
          * Creates an Endpoint handling a key hold event
+         * @param duration hold duration in ms
          */
         fun endpointKeyHold(gameProvider: GameProvider, duration: Int): EndpointKey {
             return EndpointKey(gameProvider, duration)

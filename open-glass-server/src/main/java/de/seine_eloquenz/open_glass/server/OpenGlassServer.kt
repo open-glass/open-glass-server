@@ -34,7 +34,7 @@ class OpenGlassServer(hostname: String?, port: Int, apiKey: String) : NanoHTTPD(
         game = Games.NONE
         gameProvider = GameProvider { game }
         endpoints["/presskey"] = endpointKeyPress(gameProvider)
-        endpoints["/holdkey"] = endpointKeyHold(gameProvider, 10000)
+        endpoints["/holdkey"] = endpointKeyHold(gameProvider, 3000)
         endpoints["/status"] = EndpointStatus(gameProvider)
     }
 
