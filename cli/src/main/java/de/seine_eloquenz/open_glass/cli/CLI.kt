@@ -8,7 +8,7 @@ import java.net.URL
 fun main(args: Array<String>) {
     if (args.isEmpty()) {
         println("""
-            Provide at least one of the following arguments:
+            Provide one of the following arguments:
             status: check status of the server
             start: start the server
             stop: stop the server
